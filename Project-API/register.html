@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LOGINPAGE</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
+      integrity="sha512-oHDEc8Xed4hiW6CxD7qjbnI+B07vDdX7hEPTvn9pSZO1bcRqHp8mj9pyr+8RVC2GmtEfI2Bi9Ke9Ass0as+zpg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="header">
+      <div>REGISTRATION</div>
+      <div class="header-text">FORM</div>
+    </header>
+    <main>
+      <section>
+        <div class="wrapper">
+          <div class="form-container">
+            <form name="from" id="login-form">
+              <input
+                type="text"
+                class="username"
+                id="regin-username"
+                placeholder="Enter your username"
+              />
+              <div class="spacer">
+                <input
+                  type="password"
+                  class="password"
+                  id="regin-password"
+                  placeholder="Enter your password"
+                />
+
+                <input
+                  type="submit"
+                  id="regin-btn-submit"
+                  class="loginButton"
+                  value="Register"
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script>
+      const form = {
+        username: document.querySelector("#regin-username"),
+        password: document.querySelector("#regin-password"),
+        submit: document.querySelector("#regin-btn-submit"),
+      };
+      console.log(form);
+      let button = form.submit.addEventListener("click", (e) => {
+        e.preventDefault();
+        const login = "https://localhost:7121/User";
+
+        fetch(login, {
+          method: "POST",
+          headers: {
+            Accept: "application/json, text/plain, */*",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: form.username.value,
+            password: form.password.value,
+          }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+
+            if (data.error) {
+              validateform();
+            } else if (password.length < 6) {
+              alert("Password must be at least 6 characters long.");
+              return false;
+            } else {
+              window.open("index.html");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+
+      function validateform() {
+        var username = document.form.username.value;
+        var password = document.form.password.value;
+
+        if (username == null || username == "") {
+          alert("Name can't be blank");
+          return false;
+        } else if (password.length < 6) {
+          alert("Password must be at least 6 characters long.");
+          return false;
+        }
+      }
+    </script>
+  </body>
+</html>
