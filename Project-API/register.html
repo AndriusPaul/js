@@ -22,6 +22,7 @@
     <main>
       <section>
         <div class="wrapper">
+          <div id="error-message">Wrong username or password!!!</div>
           <div class="form-container">
             <form name="from" id="login-form">
               <input
@@ -51,53 +52,48 @@
       </section>
     </main>
     <script>
-      const username = document.getElementById("regin-username");
-      const password = document.getElementById("regin-password");
+      fetch("https://localhost:7121/User")
+        .then((res) => res.json())
+        .then((data) => {
+          Validation(data);
+          console.log(data);
+        });
 
       document.querySelector("form").addEventListener("submit", (e) => {
         e.preventDefault();
-        console.log(e);
-        const login = "https://localhost:7121/User";
-        fetch(login, {
+        const username = document.getElementById("regin-username").value;
+        const password = document.getElementById("regin-password").value;
+
+        const loginas = {
+          username: username,
+          password: password,
+        };
+        fetch("https://localhost:7121/api/UserTwo/register", {
           method: "POST",
+          body: JSON.stringify(loginas),
           headers: {
-            Accept: "application/json, text/plain, */*",
+            Accept: "text/json",
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            username: username,
-            password: password,
-          }),
         })
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
-
-            if (data.error) {
-              ValidateForm();
-            } else if (password.length < 6) {
-              alert("Password must be at least 6 characters long.");
-              return false;
-            } else {
-              window.open("index.html");
-            }
-          })
-          .catch((err) => {
-            console.log(err);
+            Validation(data);
           });
       });
 
-      function ValidateForm() {
-        var username = document.form.username.value;
-        var password = document.form.password.value;
-
-        if (username == null || username == "") {
-          alert("Name can't be blank");
-          return false;
-        } else if (password.length < 6) {
-          alert("Password must be at least 6 characters long.");
-          return false;
-        }
+      function Validation(property) {
+        const username = document.getElementById("regin-username").value;
+        property.forEach((element) => {
+          if (username == property.username) {
+            ShowBlock();
+          }
+        });
+      }
+      function ShowBlock() {
+        var hideBlock = document.getElementById("error-message");
+        hideBlock.style.display = "block";
       }
     </script>
   </body>

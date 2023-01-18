@@ -1,21 +1,34 @@
-const state = {};
-
-fetch("https://localhost:7121/User")
-  .then((res) => res.json())
-  .then((data) => {
-    state.users = data;
-    //console.log(data);
-    LogIn(data);
-  });
-
-function LogIn(users) {
-  users.forEach((user) => {
-    const username = document.getElementById("signin-username");
-    const password = document.getElementById("signin-password");
-  });
-}
-
 document.querySelector("form").addEventListener("submit", (e) => {
   e.preventDefault();
-  console.log(e);
+  let username = document.getElementById("signin-username").value;
+  let password = document.getElementById("signin-password").value;
+  const login = {
+    username: username,
+    password: password,
+  };
+  fetch("https://localhost:7121/api/UserTwo/login", {
+    method: "POST",
+    body: JSON.stringify(login),
+    headers: {
+      Accept: "text/json",
+      "Content-Type": "application/json",
+    },
+  }).then((res) => {
+    if (res.ok) {
+      alert(`Uzklausa sekminga! Welcome ${username}!`);
+      window.location.replace("login.html");
+    } else {
+      ShowBlock();
+      console.log(res);
+    }
+  });
 });
+function ShowBlock() {
+  var hideBlock = document.getElementById("error-message");
+  hideBlock.style.display = "block";
+}
+
+function onClick() {
+  var hideBlock = document.getElementById("error-message");
+  hideBlock.style.display = "none";
+}
