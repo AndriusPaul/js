@@ -74,7 +74,9 @@
       });
 
       const id = sessionStorage.getItem("userId");
+      const role = sessionStorage.getItem("role");
 
+      console.log(role);
       fetch("https://localhost:7121/Person?id=" + id, {
         method: "GET",
         headers: {
@@ -85,22 +87,6 @@
         .then((res) => res.json())
         .then((data) => {
           renderUserInfo(data);
-        });
-
-      fetch("https://localhost:7121/Address?id=" + id, {
-        method: "GET",
-        headers: {
-          Accept: "text/json",
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data == "undefined") {
-            alert("Duomenu nera");
-          } else {
-            renderUserAddress(data);
-          }
         });
 
       function renderUserInfo(user) {
@@ -136,6 +122,18 @@
 
         userContainer.append(userCard, userInfo);
       }
+
+      fetch("https://localhost:7121/Address?id=" + id, {
+        method: "GET",
+        headers: {
+          Accept: "text/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          renderUserAddress(data);
+        });
 
       function renderUserAddress(user) {
         const userAddressContainer = document.getElementById("address");
