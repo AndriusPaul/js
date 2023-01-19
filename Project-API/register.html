@@ -22,21 +22,24 @@
     <main>
       <section>
         <div class="wrapper">
-          <div id="error-message">Wrong username or password!!!</div>
+          <div id="error-message">Username already exists!!!</div>
           <div class="form-container">
             <form name="from" id="login-form">
               <input
                 type="text"
                 class="username"
                 id="regin-username"
-                placeholder="Enter your username"
+                placeholder="Enter username"
+                required
               />
               <div class="spacer">
                 <input
                   type="password"
                   class="password"
                   id="regin-password"
-                  placeholder="Enter your password"
+                  placeholder="Enter password (Min 6 char required)"
+                  minlength="6"
+                  required
                 />
 
                 <input
@@ -52,13 +55,6 @@
       </section>
     </main>
     <script>
-      fetch("https://localhost:7121/User")
-        .then((res) => res.json())
-        .then((data) => {
-          Validation(data);
-          console.log(data);
-        });
-
       document.querySelector("form").addEventListener("submit", (e) => {
         e.preventDefault();
         const username = document.getElementById("regin-username").value;
@@ -76,14 +72,22 @@
             "Content-Type": "application/json",
           },
         })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            Validation(data);
+          .then((response) => {
+            if (response.ok) {
+              console.log(response);
+              alert(`User ${username} created.`);
+              window.open("index.html");
+            } else {
+              //alert(`${username} already exists.`);
+              ShowBlock();
+            }
+          })
+          .catch((err) => {
+            console.log(err);
           });
       });
 
-      function Validation(property) {
+      function Validation() {
         const username = document.getElementById("regin-username").value;
         property.forEach((element) => {
           if (username == property.username) {

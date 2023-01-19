@@ -13,14 +13,29 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="style.css" />
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/parse/3.5.1/parse.min.js"
+      integrity="sha512-K5UvqoTmWuS3zAUrjlHkDvcKVqiLTIkNIjIegNj+JgzNeqh4yaDUubGaSctred2epsMz4MIrIPpUbOyiZom+Ag=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
   </head>
   <body>
     <header class="header">
-      <div>LOG</div>
-      <div class="header-text">IN</div>
+      <div class="logo-container">
+        <div>LOG</div>
+        <div class="header-text">IN</div>
+      </div>
+      <div>
+        <form class="form-logout" role="form">
+          <input type="submit" value="Logout" id="logout" />
+        </form>
+      </div>
     </header>
     <main>
       <div>
+        <div id="user-container"></div>
         <!-- <input type="file" name="" id="fileId" onchange="imageUploaded()" />
 
         <br /><br />
@@ -41,33 +56,127 @@
       </div>
     </main>
     <script>
-      // let base64String = "";
+      //LogOut ->
+      jQuery(document).ready(function () {
+        Parse.$ = jQuery;
+        Parse.initialize("...", "...");
 
-      // function imageUploaded() {
-      //   var file = document.querySelector("input[type=file]")["files"][0];
+        $(".form-logout").on("submit", function (e) {
+          e.preventDefault();
+          console.log("Performing submit");
+          if (Parse.User.current()) {
+            Parse.User.logOut();
+            if (Parse.User.current()) console.log("Failed to log out!");
+          }
+          sessionStorage.clear();
+          window.location.href = "index.html";
+        });
+      });
 
-      //   var reader = new FileReader();
+      const id = sessionStorage.getItem("userId");
 
-      //   console.log("next");
+      fetch("https://localhost:7121/Person?id=" + id, {
+        method: "GET",
+        headers: {
+          Accept: "text/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          renderUserInfo(data);
+        });
 
-      //   reader.onload = function () {
-      //     base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+      fetch("https://localhost:7121/Address?id=" + id, {
+        method: "GET",
+        headers: {
+          Accept: "text/json",
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data == "undefined") {
+            alert("Duomenu nera");
+          } else {
+            renderUserAddress(data);
+          }
+        });
 
-      //     imageBase64Stringsep = base64String;
+      function renderUserInfo(user) {
+        const userContainer = document.getElementById("user-container");
+        userContainer.innerHTML = "";
+        const userCard = document.createElement("div");
+        userCard.setAttribute("class", "card");
+        const profilePictureDiv = document.createElement("div");
+        profilePictureDiv.setAttribute("class", "profilePciture");
+        const image = document.createElement("img");
+        image.src = "data:image/png;base64," + user.image;
+        profilePictureDiv.append(image);
+        const userNameAndSurname = document.createElement("div");
+        userNameAndSurname.setAttribute("class", "userNameAndSurname");
+        const userName = document.createElement("div");
+        userName.textContent = user.name;
+        const userSurname = document.createElement("div");
+        userSurname.textContent = user.surname;
+        userNameAndSurname.append(userName, userSurname);
+        const userInfo = document.createElement("div");
+        userInfo.setAttribute("class", "userInfo");
+        const personalId = document.createElement("div");
+        personalId.textContent = "Personal ID: " + user.personalId;
+        const phone = document.createElement("div");
+        phone.textContent = "Phone: " + user.phone;
+        const email = document.createElement("div");
+        email.textContent = "Email: " + user.email;
+        const address = document.createElement("div");
+        address.setAttribute("id", "address");
+        address.innerText = "Address:";
+        userInfo.append(personalId, phone, email, address);
+        userCard.append(profilePictureDiv, userNameAndSurname);
 
-      //     // alert(imageBase64Stringsep);
+        userContainer.append(userCard, userInfo);
+      }
 
-      //     console.log(base64String);
-      //   };
+      function renderUserAddress(user) {
+        const userAddressContainer = document.getElementById("address");
 
-      //   reader.readAsDataURL(file);
-      // }
+        const city = document.createElement("div");
+        city.textContent = "City: " + user.city;
+        const street = document.createElement("div");
+        street.textContent = "Street: " + user.street;
+        const streetNumber = document.createElement("div");
+        streetNumber.textContent = "Street No: " + user.streetNumber;
+        const houseNumber = document.createElement("div");
+        houseNumber.textContent = "Home No: " + user.houseNumber;
+        userAddressContainer.append(city, street, streetNumber, houseNumber);
+      }
+      let base64String = "";
 
-      // function displayString() {
-      //   console.log("Base64String about to be printed");
+      function imageUploaded() {
+        var file = document.querySelector("input[type=file]")["files"][0];
 
-      //   alert(base64String);
-      // }
+        var reader = new FileReader();
+
+        console.log("next");
+
+        reader.onload = function () {
+          base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+
+          imageBase64Stringsep = base64String;
+
+          // alert(imageBase64Stringsep);
+
+          console.log(base64String);
+        };
+
+        reader.readAsDataURL(file);
+      }
+
+      function displayString() {
+        console.log("Base64String about to be printed");
+
+        alert(base64String);
+      }
     </script>
   </body>
 </html>

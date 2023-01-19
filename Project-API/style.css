@@ -4,19 +4,31 @@ body {
 }
 .header {
   color: white;
-  font-weight: 700;
   height: 50px;
   background-color: #1b2029;
   padding: 50px;
-  font-size: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo-container {
   display: flex;
   gap: 10px;
+  font-weight: 700;
+  font-size: 40px;
+}
+#logout {
+  background-color: #2f80ed;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  padding: 5px;
+  border: 0;
 }
 .header-text {
   color: #2f80ed;
 }
 .wrapper {
-  padding: 500px;
+  padding: 300px;
   width: 500px;
 }
 .container {
@@ -96,7 +108,6 @@ input[type="password"] {
 
 .loginButton {
   width: 184px;
-
   background-color: #2f80ed;
   padding-top: 15px;
   padding-bottom: 15px;
@@ -115,4 +126,38 @@ input[type="password"] {
 }
 a:hover {
   color: #b5d1f5fd;
+}
+/* login */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+  width: 500px;
+}
+.profilePicture img {
+  width: 15rem;
+  margin-top: 10px;
+}
+#user-container {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 50px;
+}
+.userNameAndSurname {
+  display: flex;
+  gap: 5px;
+}
+.userInfo {
+  flex: 2;
+  padding: 20px;
+  border: #2b73d4 solid 2px;
+  border-radius: 0.5rem;
+}
+img {
+  height: 200px;
+  border-radius: 10rem;
 }
