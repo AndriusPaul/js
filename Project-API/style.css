@@ -82,9 +82,11 @@ select,
 textarea {
   color: white;
 }
-input[type="text"] {
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="file"] {
   width: 460px;
-
   background-color: #151f30;
   border-style: none;
   padding: 20px;
@@ -98,7 +100,6 @@ input[type="text"] {
 input[type="password"] {
   padding-top: 15px;
   width: 304px;
-
   padding-bottom: 15px;
   background-color: #151f30;
   border-style: none;
@@ -142,9 +143,6 @@ a:hover {
 }
 #user-container {
   color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   padding: 50px;
 }
 .userNameAndSurname {
@@ -152,6 +150,7 @@ a:hover {
   gap: 5px;
 }
 .userInfo {
+  width: 50%;
   flex: 2;
   padding: 20px;
   border: #2b73d4 solid 2px;
@@ -160,4 +159,22 @@ a:hover {
 img {
   height: 200px;
   border-radius: 10rem;
+}
+.card-container {
+  display: flex;
+  align-items: center;
+  margin-top: 50px;
+}
+/* RegForm */
+#regin-username {
+}
+#regin-password {
+  width: 460px;
+}
+h2 {
+  color: white;
+}
+.reg-wrapper {
+  padding-top: 10px;
+  padding-left: 50px;
 }

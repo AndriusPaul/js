@@ -36,26 +36,177 @@
     <main>
       <div>
         <div id="user-container"></div>
-        <!-- <input type="file" name="" id="fileId" onchange="imageUploaded()" />
-
-        <br /><br />
-
-        <button onclick="displayString()">Display String</button>
-
-        <form>
-          <label>Name:</label>
-
-          <input type="text" required />
-
-          <label>Email:</label>
-
-          <input type="email" required />
-
-          <button style="margin-top: 5px">Submit</button>
-        </form> -->
+        <div id="address"></div>
       </div>
     </main>
-    <script>
+    <script defer>
+      const id = sessionStorage.getItem("userId");
+      const role = sessionStorage.getItem("role");
+
+      CheckUserRole(id, role);
+
+      function CheckUserRole(id, role) {
+        if (role == "user") {
+          RenderRoleUser(id);
+        } else if (role == "admin") {
+          RenderRoleAdmin();
+        }
+      }
+      function RenderRoleUser(id) {
+        fetch("https://localhost:7121/Address?id=" + id, {
+          method: "GET",
+          headers: {
+            Accept: "text/json",
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            RenderUserAddress(data);
+          });
+
+        fetch("https://localhost:7121/Person?id=" + id, {
+          method: "GET",
+          headers: {
+            Accept: "text/json",
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            RenderUserInfo(data);
+          });
+
+        function RenderUserInfo(user) {
+          const userContainer = document.getElementById("user-container");
+          userContainer.innerHTML = "";
+          const userCard = document.createElement("div");
+          userCard.setAttribute("class", "card");
+          const profilePictureDiv = document.createElement("div");
+          profilePictureDiv.setAttribute("class", "profilePciture");
+          const image = document.createElement("img");
+          image.src = "data:image/png;base64," + user.image;
+          profilePictureDiv.append(image);
+          const userNameAndSurname = document.createElement("div");
+          userNameAndSurname.setAttribute("class", "userNameAndSurname");
+          const userName = document.createElement("div");
+          userName.textContent = user.name;
+          const userSurname = document.createElement("div");
+          userSurname.textContent = user.surname;
+          userNameAndSurname.append(userName, userSurname);
+          const userInfo = document.createElement("div");
+          userInfo.setAttribute("class", "userInfo");
+          const personalId = document.createElement("div");
+          personalId.textContent = "Personal ID: " + user.personalId;
+          const phone = document.createElement("div");
+          phone.textContent = "Phone: " + user.phone;
+          const email = document.createElement("div");
+          email.textContent = "Email: " + user.email;
+
+          userInfo.append(personalId, phone, email, address);
+          userCard.append(profilePictureDiv, userNameAndSurname);
+
+          userContainer.append(userCard, userInfo);
+        }
+
+        function RenderUserAddress(user) {
+          const userAddressContainer = document.getElementById("address");
+          address.innerText = "Address:";
+          const city = document.createElement("div");
+          city.textContent = "City: " + user.city;
+          const street = document.createElement("div");
+          street.textContent = "Street: " + user.street;
+          const streetNumber = document.createElement("div");
+          streetNumber.textContent = "Street No: " + user.streetNumber;
+          const houseNumber = document.createElement("div");
+          houseNumber.textContent = "Home No: " + user.houseNumber;
+          userAddressContainer.append(city, street, streetNumber, houseNumber);
+        }
+      }
+      function RenderRoleAdmin() {
+        fetch("https://localhost:7121/api/UserTwo/allInfo", {
+          method: "GET",
+          headers: {
+            Accept: "text/json",
+            "Content-Type": "application/json",
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            RenderUsers(data);
+          });
+
+        function RenderUsers(users) {
+          const userContainer = document.getElementById("user-container");
+          userContainer.innerHTML = "";
+          users.forEach((user) => {
+            const cardContainer = document.createElement("div");
+            cardContainer.setAttribute("class", "card-container");
+
+            const userCard = document.createElement("div");
+            userCard.setAttribute("class", "card");
+            const profilePictureDiv = document.createElement("div");
+            profilePictureDiv.setAttribute("class", "profilePciture");
+            const image = document.createElement("img");
+            image.src = "data:image/png;base64," + user.person.image;
+            profilePictureDiv.append(image);
+            const userNameAndSurname = document.createElement("div");
+            userNameAndSurname.setAttribute("class", "userNameAndSurname");
+            const userName = document.createElement("div");
+            userName.textContent = user.person.name;
+            const userSurname = document.createElement("div");
+            userSurname.textContent = user.person.surname;
+            userNameAndSurname.append(userName, userSurname);
+            const userInfo = document.createElement("div");
+            userInfo.setAttribute("class", "userInfo");
+            const username = document.createElement("div");
+            username.textContent = "Username: " + user.username;
+            username.style.color = "red";
+            const password = document.createElement("div");
+            password.textContent = "Password: " + user.password;
+            const role = document.createElement("div");
+            role.textContent = "Role: " + user.role;
+            const personalId = document.createElement("div");
+            personalId.textContent = "Personal ID: " + user.person.personalId;
+            const phone = document.createElement("div");
+            phone.textContent = "Phone: " + user.person.phone;
+            const email = document.createElement("div");
+            email.textContent = "Email: " + user.person.email;
+            const userAddressContainer = document.getElementById("address");
+            address.innerText = "Address:";
+            address.style.color = "#2F80E1";
+            const city = document.createElement("div");
+            city.textContent = "City: " + user.address.city;
+            const street = document.createElement("div");
+            street.textContent = "Street: " + user.address.street;
+            const streetNumber = document.createElement("div");
+            streetNumber.textContent =
+              "Street No: " + user.address.streetNumber;
+            const houseNumber = document.createElement("div");
+            houseNumber.textContent = "Home No: " + user.address.houseNumber;
+            userAddressContainer.append(
+              city,
+              street,
+              streetNumber,
+              houseNumber
+            );
+            userInfo.append(
+              username,
+              password,
+              role,
+              personalId,
+              phone,
+              email,
+              userAddressContainer
+            );
+            userCard.append(profilePictureDiv, userNameAndSurname);
+            cardContainer.append(userCard, userInfo);
+            userContainer.append(cardContainer);
+          });
+        }
+      }
+
       //LogOut ->
       jQuery(document).ready(function () {
         Parse.$ = jQuery;
@@ -72,109 +223,6 @@
           window.location.href = "index.html";
         });
       });
-
-      const id = sessionStorage.getItem("userId");
-      const role = sessionStorage.getItem("role");
-
-      console.log(role);
-      fetch("https://localhost:7121/Person?id=" + id, {
-        method: "GET",
-        headers: {
-          Accept: "text/json",
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          renderUserInfo(data);
-        });
-
-      function renderUserInfo(user) {
-        const userContainer = document.getElementById("user-container");
-        userContainer.innerHTML = "";
-        const userCard = document.createElement("div");
-        userCard.setAttribute("class", "card");
-        const profilePictureDiv = document.createElement("div");
-        profilePictureDiv.setAttribute("class", "profilePciture");
-        const image = document.createElement("img");
-        image.src = "data:image/png;base64," + user.image;
-        profilePictureDiv.append(image);
-        const userNameAndSurname = document.createElement("div");
-        userNameAndSurname.setAttribute("class", "userNameAndSurname");
-        const userName = document.createElement("div");
-        userName.textContent = user.name;
-        const userSurname = document.createElement("div");
-        userSurname.textContent = user.surname;
-        userNameAndSurname.append(userName, userSurname);
-        const userInfo = document.createElement("div");
-        userInfo.setAttribute("class", "userInfo");
-        const personalId = document.createElement("div");
-        personalId.textContent = "Personal ID: " + user.personalId;
-        const phone = document.createElement("div");
-        phone.textContent = "Phone: " + user.phone;
-        const email = document.createElement("div");
-        email.textContent = "Email: " + user.email;
-        const address = document.createElement("div");
-        address.setAttribute("id", "address");
-        address.innerText = "Address:";
-        userInfo.append(personalId, phone, email, address);
-        userCard.append(profilePictureDiv, userNameAndSurname);
-
-        userContainer.append(userCard, userInfo);
-      }
-
-      fetch("https://localhost:7121/Address?id=" + id, {
-        method: "GET",
-        headers: {
-          Accept: "text/json",
-          "Content-Type": "application/json",
-        },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          renderUserAddress(data);
-        });
-
-      function renderUserAddress(user) {
-        const userAddressContainer = document.getElementById("address");
-
-        const city = document.createElement("div");
-        city.textContent = "City: " + user.city;
-        const street = document.createElement("div");
-        street.textContent = "Street: " + user.street;
-        const streetNumber = document.createElement("div");
-        streetNumber.textContent = "Street No: " + user.streetNumber;
-        const houseNumber = document.createElement("div");
-        houseNumber.textContent = "Home No: " + user.houseNumber;
-        userAddressContainer.append(city, street, streetNumber, houseNumber);
-      }
-      let base64String = "";
-
-      function imageUploaded() {
-        var file = document.querySelector("input[type=file]")["files"][0];
-
-        var reader = new FileReader();
-
-        console.log("next");
-
-        reader.onload = function () {
-          base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
-
-          imageBase64Stringsep = base64String;
-
-          // alert(imageBase64Stringsep);
-
-          console.log(base64String);
-        };
-
-        reader.readAsDataURL(file);
-      }
-
-      function displayString() {
-        console.log("Base64String about to be printed");
-
-        alert(base64String);
-      }
     </script>
   </body>
 </html>

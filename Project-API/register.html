@@ -16,15 +16,18 @@
   </head>
   <body>
     <header class="header">
-      <div>REGISTRATION</div>
-      <div class="header-text">FORM</div>
+      <div class="logo-container">
+        <div>REGISTRATION</div>
+        <div class="header-text">FORM</div>
+      </div>
     </header>
     <main>
       <section>
-        <div class="wrapper">
+        <div class="reg-wrapper">
           <div id="error-message">Username already exists!!!</div>
           <div class="form-container">
             <form name="from" id="login-form">
+              <h2>Create Your Log In:</h2>
               <input
                 type="text"
                 class="username"
@@ -32,38 +35,154 @@
                 placeholder="Enter username"
                 required
               />
-              <div class="spacer">
-                <input
-                  type="password"
-                  class="password"
-                  id="regin-password"
-                  placeholder="Enter password (Min 6 char required)"
-                  minlength="6"
-                  required
-                />
 
-                <input
-                  type="submit"
-                  id="regin-btn-submit"
-                  class="loginButton"
-                  value="Register"
-                />
-              </div>
+              <input
+                type="password"
+                id="regin-password"
+                placeholder="Enter password (Min 6 char required)"
+                minlength="6"
+                required
+              />
+              <h2>Your Contact Information:</h2>
+              <input
+                type="text"
+                id="userName"
+                placeholder="Your Name"
+                required
+              />
+              <input
+                type="text"
+                id="userSurname"
+                placeholder="Your Surname"
+                required
+              />
+              <input
+                type="number"
+                minlength="11"
+                id="personalId"
+                placeholder="Your Personal ID"
+                required
+              />
+              <input
+                type="number"
+                minlength="9"
+                maxlength="11"
+                id="phone"
+                placeholder="Your Phone Number"
+                required
+              />
+              <input
+                type="email"
+                id="email"
+                placeholder="Your Email"
+                required
+              />
+
+              <input
+                type="file"
+                name=""
+                id="fileId"
+                onchange="imageUploaded()"
+                required
+              />
+
+              <button onclick="displayString()">Display String</button>
+              <h2>Your Contact Address</h2>
+              <input type="text" id="city" placeholder="City" required />
+              <input type="text" id="street" placeholder="Street" required />
+              <input
+                type="number"
+                placeholder="Street Number"
+                id="streetNumber"
+                maxlength="3"
+                minlength="1"
+                required
+              />
+              <input
+                type="number"
+                id="homeNumber"
+                placeholder="Home Number"
+                minlength="1"
+                maxlength="4"
+                required
+              />
+              <input
+                type="submit"
+                id="regin-btn-submit"
+                class="loginButton"
+                value="Register"
+                width="200px"
+                height="200px"
+              />
             </form>
           </div>
         </div>
       </section>
     </main>
-    <script>
+    <script defer>
+      let base64String = "";
+
+      function imageUploaded() {
+        var file = document.querySelector("input[type=file]")["files"][0];
+
+        var reader = new FileReader();
+
+        console.log("next");
+
+        reader.onload = function () {
+          base64String = reader.result.replace("data:", "").replace(/^.+,/, "");
+
+          imageBase64Stringsep = base64String;
+
+          // alert(imageBase64Stringsep);
+
+          console.log(base64String);
+        };
+
+        reader.readAsDataURL(file);
+      }
+
+      function displayString() {
+        console.log("Base64String about to be printed");
+
+        alert(base64String);
+      }
       document.querySelector("form").addEventListener("submit", (e) => {
         e.preventDefault();
+
         const username = document.getElementById("regin-username").value;
         const password = document.getElementById("regin-password").value;
+
+        const personName = document.getElementById("userName").value;
+        const personSurname = document.getElementById("userSurname").value;
+        const personalId = document.getElementById("personalId").value;
+        const phone = document.getElementById("phone").value;
+        const email = document.getElementById("email").value;
+        const image = base64String;
+        const city = document.getElementById("city").value;
+        const street = document.getElementById("street").value;
+        const streetNumber = document.getElementById("streetNumber").value;
+        const homeNumber = document.getElementById("homeNumber").value;
 
         const loginas = {
           username: username,
           password: password,
+          person: {
+            name: personName,
+            surname: personSurname,
+            personalId: personalId,
+            phone: phone,
+            email: email,
+            image: image,
+          },
+          address: {
+            city: city,
+            street: street,
+            streetNumber: streetNumber,
+            houseNumber: homeNumber,
+          },
         };
+
         fetch("https://localhost:7121/api/UserTwo/register", {
           method: "POST",
           body: JSON.stringify(loginas),
@@ -74,11 +193,9 @@
         })
           .then((response) => {
             if (response.ok) {
-              console.log(response);
               alert(`User ${username} created.`);
               window.open("index.html");
             } else {
-              //alert(`${username} already exists.`);
               ShowBlock();
             }
           })
