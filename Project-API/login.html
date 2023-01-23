@@ -96,16 +96,47 @@
           const userSurname = document.createElement("div");
           userSurname.textContent = user.surname;
           userNameAndSurname.append(userName, userSurname);
-          const userInfo = document.createElement("div");
+          const userInfo = document.createElement("form");
           userInfo.setAttribute("class", "userInfo");
-          const personalId = document.createElement("div");
-          personalId.textContent = "Personal ID: " + user.personalId;
-          const phone = document.createElement("div");
-          phone.textContent = "Phone: " + user.phone;
-          const email = document.createElement("div");
-          email.textContent = "Email: " + user.email;
 
-          userInfo.append(personalId, phone, email, address);
+          const blockContainer = document.createElement("div");
+          blockContainer.className = "block-container";
+          const spanPersonalId = document.createElement("span");
+          spanPersonalId.textContent = "Personal Id: ";
+          const personalId = document.createElement("input");
+          personalId.setAttribute("placeholder", `${user.personalId}`);
+          personalId.setAttribute("class", "update-input");
+          personalId.setAttribute("id", "personalId");
+          personalId.onclick = function () {
+            Update();
+          };
+          const blockContainer2 = document.createElement("div");
+          blockContainer2.className = "block-container";
+          const spanPhone = document.createElement("span");
+          spanPhone.textContent = "Phone: ";
+          const phone = document.createElement("input");
+          phone.setAttribute("placeholder", `${user.phone}`);
+          phone.setAttribute("class", "update-input");
+          phone.setAttribute("id", "phone");
+          const blockContainer3 = document.createElement("div");
+          blockContainer2.className = "block-container";
+          const spanEmail = document.createElement("span");
+          spanEmail.textContent = "Email: ";
+          const email = document.createElement("input");
+          email.setAttribute("placeholder", `${user.email}`);
+          email.setAttribute("class", "update-input");
+          email.setAttribute("id", "email");
+          blockContainer.append(spanPersonalId, personalId);
+
+          blockContainer2.append(spanPhone, phone);
+          blockContainer3.append(spanEmail, email);
+          userInfo.append(
+            blockContainer,
+            blockContainer2,
+            blockContainer3,
+            address
+          );
+
           userCard.append(profilePictureDiv, userNameAndSurname);
           cardContainer.append(userCard, userInfo);
           userContainer.append(cardContainer);
@@ -123,7 +154,18 @@
           streetNumber.textContent = "Street No: " + user.streetNumber;
           const houseNumber = document.createElement("div");
           houseNumber.textContent = "Home No: " + user.houseNumber;
-          userAddressContainer.append(city, street, streetNumber, houseNumber);
+          const button = document.createElement("input");
+          button.setAttribute("type", "submit");
+          button.setAttribute("id", "save-btn-submit");
+          button.setAttribute("class", "saveButton");
+          button.setAttribute("value", "Save");
+          userAddressContainer.append(
+            city,
+            street,
+            streetNumber,
+            houseNumber,
+            button
+          );
         }
       }
       function RenderRoleAdmin() {
@@ -218,10 +260,14 @@
                 headers: {
                   "Content-type": "application/json",
                 },
-              })
-                .then((res) => res.text())
-                .then((res) => console.log(res));
-              window.location.replace("login.html");
+              }).then((res) => {
+                if (res.ok) {
+                  alert(`User ${username} deleted!`);
+                  window.location.replace("login.html");
+                } else {
+                  alert("something is wrong");
+                }
+              });
             };
 
             userAddressContainer.append(address);
@@ -242,7 +288,44 @@
           });
         }
       }
+      //const personalId = document.getElementById("personalId").value;
+      function Update() {
+        const personalIdtest = document.getElementById("personalId").value;
 
+        const btn = document.getElementById("save-btn-submit");
+        btn.style.display = "block";
+        const personIdtestas = {
+          personId: personalIdtest,
+        };
+        console.log(id);
+        console.log(personalIdtest);
+
+        document.querySelector("form").addEventListener("submit", (e) => {
+          e.preventDefault();
+          fetch(
+            "https://localhost:7121/Person/personalId?id=" +
+              id +
+              "&personalId=" +
+              personalIdtest,
+            {
+              method: "PUT",
+              body: JSON.stringify(personIdtestas),
+              headers: {
+                Accept: "text/json",
+                "Content-Type": "application/json",
+              },
+            }
+          ).then((res) => {
+            if (res.ok) {
+              console.log(res);
+              alert("Uzklausa sekminga");
+              window.location.replace("login.html");
+            } else {
+              alert("Uzklausa nesekminga");
+            }
+          });
+        });
+      }
       //LogOut ->
       jQuery(document).ready(function () {
         Parse.$ = jQuery;

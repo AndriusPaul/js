@@ -91,11 +91,13 @@ input[type="file"] {
   border-style: none;
   padding: 20px;
   border-radius: 0.5rem;
+  margin-top: 5px;
 }
 .spacer {
   display: flex;
   gap: 10px;
   margin-top: 15px;
+  width: 500px;
 }
 input[type="password"] {
   padding-top: 15px;
@@ -170,8 +172,19 @@ img {
   padding-top: 10px;
   border-radius: 0px;
 }
+.saveButton {
+  display: none;
+  width: 100px;
+  background-color: #2f80ed;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-radius: 0.5rem;
+  color: white;
+}
 /* RegForm */
-
+.form-container {
+  width: 1100px;
+}
 #regin-password {
   width: 460px;
 }
@@ -181,4 +194,12 @@ h2 {
 .reg-wrapper {
   padding-top: 10px;
   padding-left: 50px;
+}
+.update-input {
+  background-color: #131720;
+  text-decoration: none;
+  border: 0;
+}
+.block-container {
+  padding-bottom: 5px;
 }
