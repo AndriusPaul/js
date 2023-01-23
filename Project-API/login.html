@@ -80,6 +80,8 @@
         function RenderUserInfo(user) {
           const userContainer = document.getElementById("user-container");
           userContainer.innerHTML = "";
+          const cardContainer = document.createElement("div");
+          cardContainer.setAttribute("class", "card-container");
           const userCard = document.createElement("div");
           userCard.setAttribute("class", "card");
           const profilePictureDiv = document.createElement("div");
@@ -105,13 +107,14 @@
 
           userInfo.append(personalId, phone, email, address);
           userCard.append(profilePictureDiv, userNameAndSurname);
-
-          userContainer.append(userCard, userInfo);
+          cardContainer.append(userCard, userInfo);
+          userContainer.append(cardContainer);
         }
 
         function RenderUserAddress(user) {
           const userAddressContainer = document.getElementById("address");
           address.innerText = "Address:";
+          address.style.color = "#2F80E1";
           const city = document.createElement("div");
           city.textContent = "City: " + user.city;
           const street = document.createElement("div");
@@ -173,7 +176,8 @@
             phone.textContent = "Phone: " + user.person.phone;
             const email = document.createElement("div");
             email.textContent = "Email: " + user.person.email;
-            const userAddressContainer = document.getElementById("address");
+            const userAddressContainer = document.createElement("div");
+            const address = document.createElement("div");
             address.innerText = "Address:";
             address.style.color = "#2F80E1";
             const city = document.createElement("div");
@@ -185,12 +189,43 @@
               "Street No: " + user.address.streetNumber;
             const houseNumber = document.createElement("div");
             houseNumber.textContent = "Home No: " + user.address.houseNumber;
-            userAddressContainer.append(
-              city,
-              street,
-              streetNumber,
-              houseNumber
-            );
+            const deleteUser = document.createElement("img");
+            deleteUser.setAttribute("id", "delete-icon");
+            deleteUser.src = "./images/delete-xxl.png";
+            const userId = user.id;
+            console.log(userId);
+
+            deleteUser.onclick = function () {
+              fetch("https://localhost:7121/User/byId?id=" + userId, {
+                method: "DELETE",
+                headers: {
+                  "Content-type": "application/json",
+                },
+              })
+                .then((res) => res.text())
+                .then((res) => console.log(res));
+
+              fetch("https://localhost:7121/Person/byUserId?id=" + userId, {
+                method: "DELETE",
+                headers: {
+                  "Content-type": "application/json",
+                },
+              })
+                .then((res) => res.text())
+                .then((res) => console.log(res));
+              fetch("https://localhost:7121/Address/byUserId?id=" + userId, {
+                method: "DELETE",
+                headers: {
+                  "Content-type": "application/json",
+                },
+              })
+                .then((res) => res.text())
+                .then((res) => console.log(res));
+              window.location.replace("login.html");
+            };
+
+            userAddressContainer.append(address);
+            address.append(city, street, streetNumber, houseNumber);
             userInfo.append(
               username,
               password,
@@ -198,7 +233,8 @@
               personalId,
               phone,
               email,
-              userAddressContainer
+              userAddressContainer,
+              deleteUser
             );
             userCard.append(profilePictureDiv, userNameAndSurname);
             cardContainer.append(userCard, userInfo);

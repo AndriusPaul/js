@@ -163,11 +163,15 @@ img {
 .card-container {
   display: flex;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 20px;
+}
+#delete-icon {
+  height: 30px;
+  padding-top: 10px;
+  border-radius: 0px;
 }
 /* RegForm */
-#regin-username {
-}
+
 #regin-password {
   width: 460px;
 }
