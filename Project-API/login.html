@@ -207,6 +207,7 @@
             userInfo.setAttribute("class", "userInfo");
             const username = document.createElement("div");
             username.textContent = "Username: " + user.username;
+
             username.style.color = "red";
             const password = document.createElement("div");
             password.textContent = "Password: " + user.password;
@@ -243,31 +244,38 @@
                 headers: {
                   "Content-type": "application/json",
                 },
-              })
-                .then((res) => res.text())
-                .then((res) => console.log(res));
-
-              fetch("https://localhost:7121/Person/byUserId?id=" + userId, {
-                method: "DELETE",
-                headers: {
-                  "Content-type": "application/json",
-                },
-              })
-                .then((res) => res.text())
-                .then((res) => console.log(res));
-              fetch("https://localhost:7121/Address/byUserId?id=" + userId, {
-                method: "DELETE",
-                headers: {
-                  "Content-type": "application/json",
-                },
               }).then((res) => {
+                console.log(res);
                 if (res.ok) {
-                  alert(`User ${username} deleted!`);
-                  window.location.replace("login.html");
+                  alert(`User ${user.username} deleted!`);
+                  window.open("login.html");
                 } else {
                   alert("something is wrong");
                 }
               });
+
+              // fetch("https://localhost:7121/Person/byUserId?id=" + userId, {
+              //   method: "DELETE",
+              //   headers: {
+              //     "Content-type": "application/json",
+              //   },
+              // })
+              //   .then((res) => res.text())
+              //   .then((res) => console.log(res));
+              // fetch("https://localhost:7121/Address/byUserId?id=" + userId, {
+              //   method: "DELETE",
+              //   headers: {
+              //     "Content-type": "application/json",
+              //   },
+              // }).then((res) => {
+              //   console.log(res);
+              //   if (res.ok) {
+              //     alert(`User ${username} deleted!`);
+              //     window.open("login.html");
+              //   } else {
+              //     alert("something is wrong");
+              //   }
+              // });
             };
 
             userAddressContainer.append(address);
@@ -290,12 +298,11 @@
       }
       //const personalId = document.getElementById("personalId").value;
       function Update() {
-        const personalIdtest = document.getElementById("personalId").value;
-
         const btn = document.getElementById("save-btn-submit");
+        const personalIdtest = document.getElementById("personalId").value;
         btn.style.display = "block";
-        const personIdtestas = {
-          personId: personalIdtest,
+        const someData = {
+          personId: document.getElementById("personalId").value,
         };
         console.log(id);
         console.log(personalIdtest);
@@ -309,21 +316,16 @@
               personalIdtest,
             {
               method: "PUT",
-              body: JSON.stringify(personIdtestas),
+              body: JSON.stringify(someData),
               headers: {
                 Accept: "text/json",
                 "Content-Type": "application/json",
               },
             }
-          ).then((res) => {
-            if (res.ok) {
-              console.log(res);
-              alert("Uzklausa sekminga");
-              window.location.replace("login.html");
-            } else {
-              alert("Uzklausa nesekminga");
-            }
-          });
+          )
+            .then((res) => res.json())
+            .then((data) => console.log(data))
+            .then((err) => console.log(err));
         });
       }
       //LogOut ->
